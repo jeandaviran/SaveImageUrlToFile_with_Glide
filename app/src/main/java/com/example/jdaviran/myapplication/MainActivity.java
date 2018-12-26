@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,23 +36,47 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Glide.with(MainActivity.this)
-                        .asBitmap()
-                        .load("YOUR_URL")
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                String timeNow = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                                String imageName = "Example_"+ timeNow +".jpg";
-                                saveImage(resource,imageName);
-                            }
-                        });
+                for (int i = 0; i < 30;i++) {
+                    final int pos = i;
+                    Glide.with(MainActivity.this)
+                            .asBitmap()
+                            .load("https://cdn.images.dailystar.co.uk/dynamic/184/photos/939000/620x/Super-Mario-Odyssey-Nintendo-Switch-DLC-confirmed-in-new-Nintendo-blog-post-694574.jpg")
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
 
+                                    new LongOperation(resource,String.valueOf(pos)).execute();
+                                    //saveImage(resource);
+                                }
+                            });
+
+                }
             }
         });
     }
 
-    private String saveImage(Bitmap image,String imageFileName) {
+private class LongOperation extends AsyncTask<String, Void, String> {
+Bitmap bitmap;
+String name;
+public LongOperation(Bitmap bitmap,String name){
+    this.bitmap = bitmap;
+    this.name = name;
+}
+
+        @Override
+        protected String doInBackground(String... params) {
+            saveImage(bitmap,name);
+         return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+        }
+    }
+
+        private void saveImage(Bitmap image,String timeNow) {
+            //String timeNow = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String imageFileName = "Example_" + timeNow + ".jpg";
         String savedImagePath = null;
 
         //PATH FILE PICTURE
@@ -68,15 +93,17 @@ public class MainActivity extends AppCompatActivity {
                 OutputStream fOut = new FileOutputStream(imageFile);
                 image.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
                 fOut.close();
+                galleryAddPic(savedImagePath);
+                Toast.makeText(MainActivity.this, "IMAGE SAVED", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             // Add the image to the system gallery
-            galleryAddPic(savedImagePath);
-            Toast.makeText(MainActivity.this, "IMAGE SAVED", Toast.LENGTH_LONG).show();
+
+
         }
-        return savedImagePath;
+        //return savedImagePath;
     }
 
     // solicita al escáner de medios que escanee un archivo y lo agregue a la base de datos de medios. La ruta al archivo está contenida en el campo Intent.mData.
