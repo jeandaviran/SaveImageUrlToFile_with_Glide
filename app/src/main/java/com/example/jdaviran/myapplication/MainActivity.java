@@ -27,19 +27,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-    EditText editText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        editText = findViewById(R.id.editText);
         ((Button) findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
                 Glide.with(MainActivity.this)
                         .asBitmap()
-                        .load(editText)
+                        .load("YOUR_URL")
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
@@ -56,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private String saveImage(Bitmap image,String imageFileName) {
         String savedImagePath = null;
 
+        //PATH FILE PICTURE
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                 + "/YOUR_FILE");
         boolean success = true;
@@ -80,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         return savedImagePath;
     }
 
+    // solicita al escáner de medios que escanee un archivo y lo agregue a la base de datos de medios. La ruta al archivo está contenida en el campo Intent.mData.
     private void galleryAddPic(String imagePath) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(imagePath);

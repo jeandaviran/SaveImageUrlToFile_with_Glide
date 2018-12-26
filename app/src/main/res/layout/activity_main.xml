@@ -7,17 +7,12 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:hint="URL"/>
+
 <Button
     android:id="@+id/btn"
     android:layout_marginTop="20dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Boton"/>
+    android:text="SAVE IMAGE"/>
 
 </LinearLayout>
